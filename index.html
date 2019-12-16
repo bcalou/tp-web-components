@@ -4,7 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="src/current-time/current-time.js"></script>
+    <script src="src/screen-size/screen-size.js"></script>
+    <script type="module" src="src/todo/pages/todo-app/todo-app.js"></script>
     <title>Web Components</title>
   </head>
-  <body></body>
+  <body>
+    <current-time>Date locale</current-time>
+    <current-time utc="true"></current-time>
+
+    <screen-size dimension="width">Largeur</screen-size>
+    <screen-size dimension="height">Hauteur</screen-size>
+
+    <todo-app></todo-app>
+  </body>
 </html>
