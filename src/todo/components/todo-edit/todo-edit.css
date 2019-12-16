@@ -1,0 +1,12 @@
+.todoEdit {
+  display: flex;
+}
+
+.todoEdit__input {
+  max-width: calc(100vw - 170px);
+}
+
+.todoEdit__error {
+  color: red;
+  margin-bottom: 0;
+}

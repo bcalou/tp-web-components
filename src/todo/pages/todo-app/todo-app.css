@@ -1,0 +1,14 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.todoApp__title {
+  font-size: 2rem;
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+  font-weight: normal;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+    'Lucida Sans', Arial, sans-serif;
+}

@@ -1,0 +1,17 @@
+.todoNew__form {
+  display: flex;
+}
+
+.todoNew__input {
+  flex: 1;
+  height: 30px;
+}
+
+.todoNew__addButton {
+  padding: 0 1rem;
+}
+
+.todoNew__error {
+  color: red;
+  margin-bottom: 0;
+}
