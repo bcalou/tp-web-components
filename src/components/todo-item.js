@@ -2,7 +2,34 @@ import todosService from '/src/services/todos.service.js';
 
 const todoItemTemplate = document.createElement('template');
 todoItemTemplate.innerHTML = `
-  <link rel="stylesheet" href="src/components/todo-item/todo-item.css">
+  <style>
+    :host {
+      margin: 1rem 0;
+      display: flex;
+    }
+
+    .todoItem__checkbox {
+      height: 2rem;
+      width: 2rem;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+
+    .todoItem__checkbox:checked ~ .todoItem__name .todoItem__nameStatic {
+      text-decoration: line-through;
+    }
+
+    .todoItem__name {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .todoItem__nameStatic {
+      margin: 0;
+    }
+  </style>
 
   <input type="checkbox" class="todoItem__checkbox">
   <div class="todoItem__name"></div>

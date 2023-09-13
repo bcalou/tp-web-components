@@ -2,7 +2,20 @@ import todosService from '/src/services/todos.service.js';
 
 const todoEditTemplate = document.createElement('template');
 todoEditTemplate.innerHTML = `
-  <link rel="stylesheet" href="src/components/todo-edit/todo-edit.css">
+  <style>
+    .todoEdit {
+      display: flex;
+    }
+
+    .todoEdit__input {
+      max-width: calc(100vw - 170px);
+    }
+
+    .todoEdit__error {
+      color: red;
+      margin-bottom: 0;
+    }
+  </style>
 
   <form class="todoEdit__form">
     <input class="todoEdit__input">

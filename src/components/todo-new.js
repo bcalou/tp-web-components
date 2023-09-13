@@ -1,0 +1,76 @@
+import todosService from "/src/services/todos.service.js";
+
+const todoNewTemplate = document.createElement("template");
+todoNewTemplate.innerHTML = `
+  <style>
+    .todoNew__inputAndButton {
+      display: flex;
+    }
+
+    .todoNew__input {
+      flex: 1;
+      height: 30px;
+    }
+
+    .todoNew__addButton {
+      padding: 0 1rem;
+    }
+
+    .todoNew__error {
+      color: red;
+      margin-bottom: 0;
+    }
+  </style>
+
+  <form class="todoNew__form">
+    <label for="name">Nom de la tâche</label>
+
+    <div class="todoNew__inputAndButton">
+      <input id="name" class="todoNew__input">
+      <button class="todoNew__addButton">Ajouter</button>
+    </div>
+  </form>
+
+  <p class="todoNew__error">Le nom de la tâche ne peut pas être vide</p>
+`;
+
+export class TodoNew extends HTMLElement {
+  constructor() {
+    super();
+
+    this.el = this.attachShadow({ mode: "open" });
+    this.el.appendChild(todoNewTemplate.content.cloneNode(true));
+
+    this.formEl = this.el.querySelector(".todoNew__form");
+    this.inputEl = this.el.querySelector(".todoNew__input");
+
+    this.errorEl = this.el.querySelector(".todoNew__error");
+    this.errorEl.style.display = "none";
+
+    this.attachEvents();
+  }
+
+  attachEvents() {
+    this.formEl.addEventListener("submit", (event) => {
+      event.preventDefault();
+      this.addTodo();
+    });
+
+    this.inputEl.addEventListener("input", () => {
+      if (this.inputEl.value.length) {
+        this.errorEl.style.display = "none";
+      }
+    });
+  }
+
+  addTodo() {
+    if (this.inputEl.value.length) {
+      todosService.addTodo(this.inputEl.value);
+      this.inputEl.value = "";
+    } else {
+      this.errorEl.style.display = "block";
+    }
+  }
+}
+
+customElements.define("todo-new", TodoNew);

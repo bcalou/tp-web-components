@@ -2,7 +2,27 @@ import todosService from '/src/services/todos.service.js';
 
 const todoListTemplate = document.createElement('template');
 todoListTemplate.innerHTML = `
-  <link rel="stylesheet" href="src/components/todo-list/todo-list.css">
+  <style>
+    :host {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .todoList__items {
+      margin-top: 1rem;
+      padding-bottom: 3rem;
+    }
+
+    .todoList__removeDone {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 3rem;
+      left: 0;
+      box-shadow: 0 -10px 10px white;
+    }
+  </style>
 
   <todo-new></todo-new>
 
