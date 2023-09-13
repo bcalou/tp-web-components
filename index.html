@@ -4,18 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <script src="src/current-time/current-time.js"></script>
-    <script src="src/screen-size/screen-size.js"></script>
-    <script type="module" src="src/todo/pages/todo-app/todo-app.js"></script>
+    <script
+      type="module"
+      src="src/components/todo-list/todo-list.js"
+    ></script>
+    <script
+      type="module"
+      src="src/components/todo-item/todo-item.js"
+    ></script>
+    <script
+      type="module"
+      src="src/components/todo-edit/todo-edit.js"
+    ></script>
+    <script
+      type="module"
+      src="src/components/todo-new/todo-new.js"
+    ></script>
     <title>Web Components</title>
   </head>
   <body>
-    <current-time>Date locale</current-time>
-    <current-time utc="true"></current-time>
-
-    <screen-size dimension="width">Largeur</screen-size>
-    <screen-size dimension="height">Hauteur</screen-size>
-
-    <todo-app></todo-app>
+    <todo-list></todo-list>
   </body>
 </html>

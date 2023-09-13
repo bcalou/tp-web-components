@@ -1,16 +1,14 @@
-import { TodoItem } from '/src/todo/components/todo-item/todo-item.js';
-import { TodoNew } from '/src/todo/components/todo-new/todo-new.js';
-import todosService from '/src/todo/services/todos.service.js';
+import todosService from '/src/services/todos.service.js';
 
 const todoListTemplate = document.createElement('template');
 todoListTemplate.innerHTML = `
-  <link rel="stylesheet" href="src/todo/components/todo-list/todo-list.css">
+  <link rel="stylesheet" href="src/components/todo-list/todo-list.css">
 
   <todo-new></todo-new>
 
   <section class="todoList__items"></section>
 
-  <button class="todoList__removeDone">Remove done</button>
+  <button class="todoList__removeDone">Retirer les tâches effectuées</button>
 `;
 
 export class TodoList extends HTMLElement {

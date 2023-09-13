@@ -1,15 +1,19 @@
-import todosService from '/src/todo/services/todos.service.js';
+import todosService from '/src/services/todos.service.js';
 
 const todoNewTemplate = document.createElement('template');
 todoNewTemplate.innerHTML = `
-  <link rel="stylesheet" href="src/todo/components/todo-new/todo-new.css">
+  <link rel="stylesheet" href="src/components/todo-new/todo-new.css">
 
   <form class="todoNew__form">
-    <input class="todoNew__input">
-    <button class="todoNew__addButton">Add</button>
+    <label for="name">Nom de la tâche</label>
+
+    <div class="todoNew__inputAndButton">
+      <input id="name" class="todoNew__input">
+      <button class="todoNew__addButton">Ajouter</button>
+    </div>
   </form>
 
-  <p class="todoNew__error">The todo name cannot be empty</p>
+  <p class="todoNew__error">Le nom de la tâche ne peut pas être vide</p>
 `;
 
 export class TodoNew extends HTMLElement {

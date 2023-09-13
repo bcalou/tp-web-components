@@ -1,9 +1,8 @@
-import todosService from '/src/todo/services/todos.service.js';
-import { TodoEdit } from '/src/todo/components/todo-edit/todo-edit.js';
+import todosService from '/src/services/todos.service.js';
 
 const todoItemTemplate = document.createElement('template');
 todoItemTemplate.innerHTML = `
-  <link rel="stylesheet" href="src/todo/components/todo-item/todo-item.css">
+  <link rel="stylesheet" href="src/components/todo-item/todo-item.css">
 
   <input type="checkbox" class="todoItem__checkbox">
   <div class="todoItem__name"></div>
