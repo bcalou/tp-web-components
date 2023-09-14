@@ -1,9 +1,9 @@
 class TodosService {
   constructor() {
-    this.todos = localStorage.getItem('todos')
-      ? JSON.parse(localStorage.getItem('todos'))
+    this.todos = localStorage.getItem("todos")
+      ? JSON.parse(localStorage.getItem("todos"))
       : [];
-    this.updates = [];
+    this.subscribers = [];
   }
 
   addTodo(name) {
@@ -38,21 +38,17 @@ class TodosService {
     return this.todos.some((todo) => todo.done);
   }
 
-  subscribe(onChange) {
-    this.updates.push(onChange);
+  subscribe(subscriber) {
+    this.subscribers.push(subscriber);
   }
 
   onListUpdated() {
-    localStorage.setItem('todos', JSON.stringify(this.todos));
-    this.updates.forEach((update) => update());
+    localStorage.setItem("todos", JSON.stringify(this.todos));
+    this.subscribers.forEach((update) => update());
   }
 
   getRandomId() {
-    return parseInt(
-      Math.random()
-        .toString()
-        .slice(2),
-    );
+    return Math.random().toString().slice(2);
   }
 }
 

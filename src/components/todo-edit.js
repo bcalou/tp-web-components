@@ -1,6 +1,6 @@
-import todosService from '/src/services/todos.service.js';
+import todosService from "/src/services/todos.service.js";
 
-const todoEditTemplate = document.createElement('template');
+const todoEditTemplate = document.createElement("template");
 todoEditTemplate.innerHTML = `
   <style>
     .todoEdit {
@@ -29,23 +29,23 @@ export class TodoEdit extends HTMLElement {
   constructor() {
     super();
 
-    this.el = this.attachShadow({ mode: 'open' });
+    this.el = this.attachShadow({ mode: "open" });
     this.el.appendChild(todoEditTemplate.content.cloneNode(true));
 
-    this.formEl = this.el.querySelector('.todoEdit__form');
-    this.inputEl = this.el.querySelector('.todoEdit__input');
+    this.formEl = this.el.querySelector(".todoEdit__form");
+    this.inputEl = this.el.querySelector(".todoEdit__input");
 
-    this.errorEl = this.el.querySelector('.todoEdit__error');
-    this.errorEl.style.display = 'none';
+    this.errorEl = this.el.querySelector(".todoEdit__error");
+    this.errorEl.style.display = "none";
   }
 
   static get observedAttributes() {
-    return ['todo-id'];
+    return ["todo-id"];
   }
 
   attributeChangedCallback(name) {
-    if (name === 'todo-id') {
-      this.todo = todosService.getById(this.getId());
+    if (name === "todo-id") {
+      this.todo = todosService.getById(this.getAttribute("todo-id"));
       this.render();
     }
   }
@@ -60,30 +60,26 @@ export class TodoEdit extends HTMLElement {
   }
 
   attachEvents() {
-    this.formEl.addEventListener('submit', (event) => {
+    this.formEl.addEventListener("submit", (event) => {
       event.preventDefault();
 
       this.setName();
     });
 
-    this.inputEl.addEventListener('input', () => {
+    this.inputEl.addEventListener("input", () => {
       if (this.inputEl.value.length) {
-        this.errorEl.style.display = 'none';
+        this.errorEl.style.display = "none";
       }
     });
   }
 
   setName() {
     if (this.inputEl.value.length) {
-      todosService.setName(this.getId(), this.inputEl.value);
+      todosService.setName(this.getAttribute("todo-id"), this.inputEl.value);
     } else {
-      this.errorEl.style.display = 'block';
+      this.errorEl.style.display = "block";
     }
-  }
-
-  getId() {
-    return parseInt(this.getAttribute('todo-id'));
   }
 }
 
-customElements.define('todo-edit', TodoEdit);
+customElements.define("todo-edit", TodoEdit);

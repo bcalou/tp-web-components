@@ -4,6 +4,7 @@ const todoNewTemplate = document.createElement("template");
 todoNewTemplate.innerHTML = `
   <style>
     .todoNew__inputAndButton {
+      margin-top: 0.5rem;
       display: flex;
     }
 

@@ -1,6 +1,6 @@
-import todosService from '/src/services/todos.service.js';
+import todosService from "/src/services/todos.service.js";
 
-const todoListTemplate = document.createElement('template');
+const todoListTemplate = document.createElement("template");
 todoListTemplate.innerHTML = `
   <style>
     :host {
@@ -9,7 +9,7 @@ todoListTemplate.innerHTML = `
       flex-grow: 1;
     }
 
-    .todoList__items {
+    .todoList__list {
       margin-top: 1rem;
       padding-bottom: 3rem;
     }
@@ -35,11 +35,12 @@ export class TodoList extends HTMLElement {
   constructor() {
     super();
 
-    this.el = this.attachShadow({ mode: 'open' });
+    this.el = this.attachShadow({ mode: "open" });
     this.el.appendChild(todoListTemplate.content.cloneNode(true));
 
-    this.itemsEl = this.el.querySelector('.todoList__items');
-    this.removeDoneEl = this.el.querySelector('.todoList__removeDone');
+    this.itemsEl = this.el.querySelector(".todoList__items");
+    this.itemsEls = [];
+    this.removeDoneEl = this.el.querySelector(".todoList__removeDone");
 
     this.attachEvents();
     this.render();
@@ -48,22 +49,47 @@ export class TodoList extends HTMLElement {
   }
 
   attachEvents() {
-    this.removeDoneEl.addEventListener('click', () =>
-      todosService.removeDone(),
+    this.removeDoneEl.addEventListener("click", () =>
+      todosService.removeDone()
     );
   }
 
   render() {
-    this.itemsEl.innerHTML = '';
+    this.renderTodos();
+    this.removeDoneEl.disabled = !todosService.hasDoneTodos();
+  }
 
-    todosService.todos.forEach((todo) => {
-      const todoItem = document.createElement('todo-item');
-      todoItem.setAttribute('todo-id', todo.id);
-      this.itemsEl.appendChild(todoItem);
+  renderTodos() {
+    const todosToAdd = [...todosService.todos];
+
+    // Go trough each current item to determine which one should be kept
+    this.itemsEls = this.itemsEls.filter((itemEl) => {
+      // Search for the matching todo in the todos to add
+      const todo = todosToAdd.find((todo, index) => {
+        if (todo.id === itemEl.getAttribute("todo-id")) {
+          // Remove the todos from the add list, so it is not added twice
+          todosToAdd.splice(index, 1);
+          return todo;
+        }
+      });
+
+      // Todo not found, element must be removed
+      if (!todo) {
+        this.itemsEl.removeChild(itemEl);
+      }
+
+      // Keep only if the matching todo was found
+      return todo;
     });
 
-    this.removeDoneEl.disabled = !todosService.hasDoneTodos();
+    // Add the remaining todos
+    todosToAdd.forEach((todo) => {
+      const todoItem = document.createElement("todo-item");
+      todoItem.setAttribute("todo-id", todo.id);
+      this.itemsEls.push(todoItem);
+      this.itemsEl.appendChild(todoItem);
+    });
   }
 }
 
-customElements.define('todo-list', TodoList);
+customElements.define("todo-list", TodoList);

@@ -1,6 +1,6 @@
-import todosService from '/src/services/todos.service.js';
+import todosService from "/src/services/todos.service.js";
 
-const todoItemTemplate = document.createElement('template');
+const todoItemTemplate = document.createElement("template");
 todoItemTemplate.innerHTML = `
   <style>
     :host {
@@ -39,21 +39,21 @@ export class TodoItem extends HTMLElement {
   constructor() {
     super();
 
-    this.el = this.attachShadow({ mode: 'open' });
+    this.el = this.attachShadow({ mode: "open" });
     this.el.appendChild(todoItemTemplate.content.cloneNode(true));
 
-    this.checkboxEl = this.el.querySelector('.todoItem__checkbox');
-    this.nameEl = this.el.querySelector('.todoItem__name');
+    this.checkboxEl = this.el.querySelector(".todoItem__checkbox");
+    this.nameEl = this.el.querySelector(".todoItem__name");
     this.editing = false;
   }
 
   static get observedAttributes() {
-    return ['todo-id'];
+    return ["todo-id"];
   }
 
   attributeChangedCallback(name) {
-    if (name === 'todo-id') {
-      this.todo = todosService.getById(this.getId());
+    if (name === "todo-id") {
+      this.todo = todosService.getById(this.getAttribute("todo-id"));
       this.render();
     }
   }
@@ -65,40 +65,39 @@ export class TodoItem extends HTMLElement {
 
   render() {
     this.checkboxEl.checked = this.todo.done;
-    this.nameEl.innerHTML = '';
+    this.nameEl.innerHTML = "";
 
     this.nameEl.appendChild(
-      this.editing ? this.getEditingElement() : this.getStaticNameElement(),
+      this.editing ? this.getEditingElement() : this.getStaticNameElement()
     );
 
     this.attachEvents();
   }
 
   attachEvents() {
-    this.checkboxEl.addEventListener('change', () =>
-      todosService.setDone(this.getId(), this.checkboxEl.checked),
+    this.checkboxEl.addEventListener("change", () =>
+      todosService.setDone(
+        this.getAttribute("todo-id"),
+        this.checkboxEl.checked
+      )
     );
   }
 
   getEditingElement() {
-    const todoEditEl = document.createElement('todo-edit');
-    todoEditEl.setAttribute('todo-id', this.todo.id);
+    const todoEditEl = document.createElement("todo-edit");
+    todoEditEl.setAttribute("todo-id", this.todo.id);
 
     return todoEditEl;
   }
 
   getStaticNameElement() {
-    const staticNameEl = document.createElement('p');
+    const staticNameEl = document.createElement("p");
     staticNameEl.innerHTML = this.todo.name;
-    staticNameEl.classList.add('todoItem__nameStatic');
-    staticNameEl.addEventListener('click', () => this.enterEditMode());
+    staticNameEl.classList.add("todoItem__nameStatic");
+    staticNameEl.addEventListener("click", () => this.enterEditMode());
 
     return staticNameEl;
   }
-
-  getId() {
-    return parseInt(this.getAttribute('todo-id'));
-  }
 }
 
-customElements.define('todo-item', TodoItem);
+customElements.define("todo-item", TodoItem);
