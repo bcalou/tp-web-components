@@ -26,32 +26,52 @@ todoEditTemplate.innerHTML = `
 `;
 
 export class TodoEdit extends HTMLElement {
-  constructor() {
-    super();
-
-    this.el = this.attachShadow({ mode: "open" });
-    this.el.appendChild(todoEditTemplate.content.cloneNode(true));
-
-    this.formEl = this.el.querySelector(".todoEdit__form");
-    this.inputEl = this.el.querySelector(".todoEdit__input");
-
-    this.errorEl = this.el.querySelector(".todoEdit__error");
-    this.errorEl.style.display = "none";
-  }
-
   static get observedAttributes() {
     return ["todo-id"];
+  }
+
+  connectedCallback() {
+    this.innerHTML = `
+      <style>
+        .todoEdit {
+          display: flex;
+        }
+    
+        .todoEdit__input {
+          max-width: calc(100vw - 170px);
+        }
+    
+        .todoEdit__error {
+          color: red;
+          margin-bottom: 0;
+        }
+      </style>
+    
+      <form class="todoEdit__form">
+        <input class="todoEdit__input">
+        <button>Valider</button>
+      </form>
+    
+      <p class="todoEdit__error">Le nom de la tâche ne peut pas être vide</p>
+    `;
+
+    // this.el = this.attachShadow({ mode: "open" });
+    // this.el.appendChild(todoEditTemplate.content.cloneNode(true));
+
+    this.formEl = this.querySelector(".todoEdit__form");
+    this.inputEl = this.querySelector(".todoEdit__input");
+
+    this.errorEl = this.querySelector(".todoEdit__error");
+    this.errorEl.style.display = "none";
+    this.inputEl.focus();
+
+    this.render();
   }
 
   attributeChangedCallback(name) {
     if (name === "todo-id") {
       this.todo = todosService.getById(this.getAttribute("todo-id"));
-      this.render();
     }
-  }
-
-  connectedCallback() {
-    this.inputEl.focus();
   }
 
   render() {
@@ -77,7 +97,6 @@ export class TodoEdit extends HTMLElement {
     if (this.inputEl.value.length) {
       todosService.setName(this.getAttribute("todo-id"), this.inputEl.value);
       todosService.setEditing(this.getAttribute("todo-id"), false);
-      console.log(this.shadowRoot);
     } else {
       this.errorEl.style.display = "block";
     }

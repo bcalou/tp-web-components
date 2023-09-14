@@ -1,51 +1,43 @@
 import todosService from "/src/services/todos.service.js";
 
-const todoNewTemplate = document.createElement("template");
-todoNewTemplate.innerHTML = `
-  <style>
-    .todoNew__inputAndButton {
-      margin-top: 0.5rem;
-      display: flex;
-    }
-
-    .todoNew__input {
-      flex: 1;
-      height: 30px;
-    }
-
-    .todoNew__addButton {
-      padding: 0 1rem;
-    }
-
-    .todoNew__error {
-      color: red;
-      margin-bottom: 0;
-    }
-  </style>
-
-  <form class="todoNew__form">
-    <label for="name">Nom de la tâche</label>
-
-    <div class="todoNew__inputAndButton">
-      <input id="name" class="todoNew__input">
-      <button class="todoNew__addButton">Ajouter</button>
-    </div>
-  </form>
-
-  <p class="todoNew__error">Le nom de la tâche ne peut pas être vide</p>
-`;
-
 export class TodoNew extends HTMLElement {
-  constructor() {
-    super();
+  connectedCallback() {
+    this.innerHTML = `<style>
+      .todoNew__inputAndButton {
+        margin-top: 0.5rem;
+        display: flex;
+      }
 
-    this.el = this.attachShadow({ mode: "open" });
-    this.el.appendChild(todoNewTemplate.content.cloneNode(true));
+      .todoNew__input {
+        flex: 1;
+        height: 30px;
+      }
 
-    this.formEl = this.el.querySelector(".todoNew__form");
-    this.inputEl = this.el.querySelector(".todoNew__input");
+      .todoNew__addButton {
+        padding: 0 1rem;
+      }
 
-    this.errorEl = this.el.querySelector(".todoNew__error");
+      .todoNew__error {
+        color: red;
+        margin-bottom: 0;
+      }
+    </style>
+
+    <form class="todoNew__form">
+      <label for="name">Nom de la tâche</label>
+
+      <div class="todoNew__inputAndButton">
+        <input id="name" class="todoNew__input">
+        <button class="todoNew__addButton">Ajouter</button>
+      </div>
+    </form>
+
+    <p class="todoNew__error">Le nom de la tâche ne peut pas être vide</p>`;
+
+    this.formEl = this.querySelector(".todoNew__form");
+    this.inputEl = this.querySelector(".todoNew__input");
+
+    this.errorEl = this.querySelector(".todoNew__error");
     this.errorEl.style.display = "none";
 
     this.attachEvents();

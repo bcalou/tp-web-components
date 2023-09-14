@@ -1,46 +1,40 @@
 import todosService from "/src/services/todos.service.js";
 
-const todoListTemplate = document.createElement("template");
-todoListTemplate.innerHTML = `
-  <style>
-    :host {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-
-    .todoList__list {
-      margin-top: 1rem;
-      padding-bottom: 3rem;
-    }
-
-    .todoList__removeDone {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      height: 3rem;
-      left: 0;
-      box-shadow: 0 -10px 10px white;
-    }
-  </style>
-
-  <todo-new></todo-new>
-
-  <section class="todoList__items"></section>
-
-  <button class="todoList__removeDone">Retirer les tâches effectuées</button>
-`;
-
 export class TodoList extends HTMLElement {
-  constructor() {
-    super();
+  connectedCallback() {
+    this.innerHTML = `
+      <style>
+        :host {
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+        }
 
-    this.el = this.attachShadow({ mode: "open" });
-    this.el.appendChild(todoListTemplate.content.cloneNode(true));
+        .todoList__list {
+          margin-top: 1rem;
+          padding-bottom: 3rem;
+        }
 
-    this.itemsEl = this.el.querySelector(".todoList__items");
+        .todoList__removeDone {
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          height: 3rem;
+          left: 0;
+          box-shadow: 0 -10px 10px white;
+        }
+      </style>
+
+      <todo-new></todo-new>
+
+      <section class="todoList__items"></section>
+
+      <button class="todoList__removeDone">Retirer les tâches effectuées</button>
+    `;
+
+    this.itemsEl = this.querySelector(".todoList__items");
     this.itemsEls = [];
-    this.removeDoneEl = this.el.querySelector(".todoList__removeDone");
+    this.removeDoneEl = this.querySelector(".todoList__removeDone");
 
     this.attachEvents();
     this.render();
