@@ -76,6 +76,7 @@ export class TodoEdit extends HTMLElement {
   setName() {
     if (this.inputEl.value.length) {
       todosService.setName(this.getAttribute("todo-id"), this.inputEl.value);
+      todosService.setEditing(this.getAttribute("todo-id"), false);
     } else {
       this.errorEl.style.display = "block";
     }

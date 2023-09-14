@@ -45,6 +45,8 @@ export class TodoItem extends HTMLElement {
     this.checkboxEl = this.el.querySelector(".todoItem__checkbox");
     this.nameEl = this.el.querySelector(".todoItem__name");
     this.editing = false;
+
+    todosService.subscribe(this.render.bind(this));
   }
 
   static get observedAttributes() {
@@ -59,7 +61,7 @@ export class TodoItem extends HTMLElement {
   }
 
   enterEditMode() {
-    this.editing = true;
+    todosService.setEditing(this.getAttribute("todo-id"), true);
     this.render();
   }
 
@@ -68,7 +70,7 @@ export class TodoItem extends HTMLElement {
     this.nameEl.innerHTML = "";
 
     this.nameEl.appendChild(
-      this.editing ? this.getEditingElement() : this.getStaticNameElement()
+      this.todo.editing ? this.getEditingElement() : this.getStaticNameElement()
     );
 
     this.attachEvents();
@@ -94,7 +96,7 @@ export class TodoItem extends HTMLElement {
     const staticNameEl = document.createElement("p");
     staticNameEl.innerHTML = this.todo.name;
     staticNameEl.classList.add("todoItem__nameStatic");
-    staticNameEl.addEventListener("click", () => this.enterEditMode());
+    staticNameEl.addEventListener("click", this.enterEditMode.bind(this));
 
     return staticNameEl;
   }

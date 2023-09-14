@@ -11,6 +11,7 @@ class TodosService {
       id: this.getRandomId(),
       name: name,
       done: false,
+      editing: false,
     });
     this.onListUpdated();
   }
@@ -21,6 +22,11 @@ class TodosService {
 
   setDone(id, done) {
     this.getById(id).done = done;
+    this.onListUpdated();
+  }
+
+  setEditing(id, editing) {
+    this.getById(id).editing = editing;
     this.onListUpdated();
   }
 
