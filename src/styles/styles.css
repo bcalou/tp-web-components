@@ -19,3 +19,9 @@ body {
   padding: 1rem;
   background: lightblue;
 }
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-block-end: 1rem;
+}
