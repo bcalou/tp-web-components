@@ -16,6 +16,11 @@ class TodosService {
     this.onListUpdated();
   }
 
+  removeTodo(id) {
+    this.todos = this.todos.filter((todo) => todo.id !== id);
+    this.onListUpdated();
+  }
+
   getById(id) {
     return this.todos.find((todo) => todo.id === id);
   }
@@ -26,7 +31,12 @@ class TodosService {
   }
 
   setEditing(id, editing) {
-    this.getById(id).editing = editing;
+    if (editing) {
+      this.todos.forEach((todo) => (todo.editing = todo.id === id));
+    } else {
+      this.getById(id).editing = false;
+    }
+
     this.onListUpdated();
   }
 

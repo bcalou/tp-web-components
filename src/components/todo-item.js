@@ -33,6 +33,8 @@ todoItemTemplate.innerHTML = `
 
   <input type="checkbox" class="todoItem__checkbox">
   <div class="todoItem__name"></div>
+  <button class="todoItem__edit">✍️</button>
+  <button class="todoItem__delete">🗑️</button>
 `;
 
 export class TodoItem extends HTMLElement {
@@ -44,9 +46,12 @@ export class TodoItem extends HTMLElement {
 
     this.checkboxEl = this.el.querySelector(".todoItem__checkbox");
     this.nameEl = this.el.querySelector(".todoItem__name");
-    this.editing = false;
+    this.editEl = this.el.querySelector(".todoItem__edit");
+    this.deleteEl = this.el.querySelector(".todoItem__delete");
 
     todosService.subscribe(this.render.bind(this));
+
+    this.attachEvents();
   }
 
   static get observedAttributes() {
@@ -69,11 +74,11 @@ export class TodoItem extends HTMLElement {
     this.checkboxEl.checked = this.todo.done;
     this.nameEl.innerHTML = "";
 
-    this.nameEl.appendChild(
-      this.todo.editing ? this.getEditingElement() : this.getStaticNameElement()
-    );
-
-    this.attachEvents();
+    if (this.todo.editing) {
+      this.nameEl.appendChild(this.getEditingElement());
+    } else {
+      this.nameEl.innerHTML = this.todo.name;
+    }
   }
 
   attachEvents() {
@@ -83,22 +88,20 @@ export class TodoItem extends HTMLElement {
         this.checkboxEl.checked
       )
     );
+
+    this.editEl.addEventListener("click", () => this.enterEditMode());
+
+    this.deleteEl.addEventListener("click", () =>
+      todosService.removeTodo(this.getAttribute("todo-id"))
+    );
   }
 
   getEditingElement() {
     const todoEditEl = document.createElement("todo-edit");
+    console.log("edit", this.getAttribute("todo-id"));
     todoEditEl.setAttribute("todo-id", this.todo.id);
 
     return todoEditEl;
-  }
-
-  getStaticNameElement() {
-    const staticNameEl = document.createElement("p");
-    staticNameEl.innerHTML = this.todo.name;
-    staticNameEl.classList.add("todoItem__nameStatic");
-    staticNameEl.addEventListener("click", this.enterEditMode.bind(this));
-
-    return staticNameEl;
   }
 }
 

@@ -19,7 +19,7 @@ todoEditTemplate.innerHTML = `
 
   <form class="todoEdit__form">
     <input class="todoEdit__input">
-    <button>Edit</button>
+    <button>Valider</button>
   </form>
 
   <p class="todoEdit__error">Le nom de la tâche ne peut pas être vide</p>
@@ -77,6 +77,7 @@ export class TodoEdit extends HTMLElement {
     if (this.inputEl.value.length) {
       todosService.setName(this.getAttribute("todo-id"), this.inputEl.value);
       todosService.setEditing(this.getAttribute("todo-id"), false);
+      console.log(this.shadowRoot);
     } else {
       this.errorEl.style.display = "block";
     }
