@@ -36,7 +36,6 @@ class CurrentTime extends HTMLElement {
     this.$title.innerHTML =
       this.format === "utc" ? "Heure UTC" : "Heure locale";
     this.renderTime();
-    this.rendered = true;
   }
 
   renderTime() {
