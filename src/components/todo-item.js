@@ -37,17 +37,19 @@ export class TodoItem extends HTMLElement {
   constructor() {
     super();
 
-    this.el = this.attachShadow({ mode: "open" });
-    this.el.appendChild(todoItemTemplate.content.cloneNode(true));
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.appendChild(todoItemTemplate.content.cloneNode(true));
 
-    this.checkboxEl = this.el.querySelector(".todoItem__checkbox");
-    this.labelEl = this.el.querySelector(".todoItem__label");
-    this.editEl = this.el.querySelector(".todoItem__edit");
-    this.deleteEl = this.el.querySelector(".todoItem__delete");
+    this.$checkbox = this.shadowRoot.querySelector(".todoItem__checkbox");
+    this.$label = this.shadowRoot.querySelector(".todoItem__label");
+    this.$editButton = this.shadowRoot.querySelector(".todoItem__edit");
+    this.$deleteButton = this.shadowRoot.querySelector(".todoItem__delete");
 
     todosService.subscribe(this.render.bind(this));
 
-    this.attachEvents();
+    this.$checkbox.addEventListener("change", this.onCheck.bind(this));
+    this.$editButton.addEventListener("click", this.onEdit.bind(this));
+    this.$deleteButton.addEventListener("click", this.onDelete.bind(this));
   }
 
   static get observedAttributes() {
@@ -61,42 +63,46 @@ export class TodoItem extends HTMLElement {
     }
   }
 
-  enterEditMode() {
+  render() {
+    this.$checkbox.checked = this.todo.done;
+    this.$checkbox.setAttribute("id", this.todo.id);
+    this.$label.innerHTML = "";
+    this.$editButton.setAttribute(
+      "aria-label",
+      `Modifier la tâche ${this.todo.name}`
+    );
+    this.$deleteButton.setAttribute(
+      "aria-label",
+      `Supprimer la tâche ${this.todo.name}`
+    );
+
+    if (this.todo.editing) {
+      this.$label.appendChild(this.getEditingElement());
+      this.$editButton.setAttribute("disabled", "");
+      this.$checkbox.setAttribute("disabled", "");
+    } else {
+      this.$label.innerHTML = this.todo.name;
+      this.$label.setAttribute("for", this.todo.id);
+      this.$editButton.removeAttribute("disabled");
+      this.$checkbox.removeAttribute("disabled", "");
+    }
+  }
+
+  onCheck(event) {
+    todosService.setDone(this.getAttribute("todo-id"), event.target.checked);
+  }
+
+  onEdit() {
     todosService.setEditing(this.getAttribute("todo-id"), true);
     this.render();
   }
 
-  render() {
-    this.checkboxEl.checked = this.todo.done;
-    this.checkboxEl.setAttribute("id", this.todo.id);
-    this.labelEl.innerHTML = "";
-
-    if (this.todo.editing) {
-      this.labelEl.appendChild(this.getEditingElement());
-    } else {
-      this.labelEl.innerHTML = this.todo.name;
-      this.labelEl.setAttribute("for", this.todo.id);
-    }
-  }
-
-  attachEvents() {
-    this.checkboxEl.addEventListener("change", () =>
-      todosService.setDone(
-        this.getAttribute("todo-id"),
-        this.checkboxEl.checked
-      )
-    );
-
-    this.editEl.addEventListener("click", () => this.enterEditMode());
-
-    this.deleteEl.addEventListener("click", () =>
-      todosService.removeTodo(this.getAttribute("todo-id"))
-    );
+  onDelete() {
+    todosService.removeTodo(this.getAttribute("todo-id"));
   }
 
   getEditingElement() {
     const todoEditEl = document.createElement("todo-edit");
-    console.log("edit", this.getAttribute("todo-id"));
     todoEditEl.setAttribute("todo-id", this.todo.id);
 
     return todoEditEl;

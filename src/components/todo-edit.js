@@ -10,33 +10,23 @@ todoEditTemplate.innerHTML = `
     .todoEdit__input {
       max-width: calc(100vw - 170px);
     }
-
-    .todoEdit__error {
-      color: red;
-      margin-bottom: 0;
-    }
   </style>
 
   <form class="todoEdit__form">
-    <input class="todoEdit__input">
+    <input class="todoEdit__input" required pattern=".*[^ ].*">
     <button>Valider</button>
   </form>
-
-  <p class="todoEdit__error">Le nom de la tâche ne peut pas être vide</p>
 `;
 
 export class TodoEdit extends HTMLElement {
   constructor() {
     super();
 
-    this.el = this.attachShadow({ mode: "open" });
-    this.el.appendChild(todoEditTemplate.content.cloneNode(true));
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.appendChild(todoEditTemplate.content.cloneNode(true));
 
-    this.formEl = this.el.querySelector(".todoEdit__form");
-    this.inputEl = this.el.querySelector(".todoEdit__input");
-
-    this.errorEl = this.el.querySelector(".todoEdit__error");
-    this.errorEl.style.display = "none";
+    this.$form = this.shadowRoot.querySelector(".todoEdit__form");
+    this.$input = this.shadowRoot.querySelector(".todoEdit__input");
   }
 
   static get observedAttributes() {
@@ -51,36 +41,23 @@ export class TodoEdit extends HTMLElement {
   }
 
   connectedCallback() {
-    this.inputEl.focus();
+    this.$input.focus();
   }
 
   render() {
-    this.inputEl.value = this.todo.name;
-    this.attachEvents();
+    this.$input.value = this.todo.name;
+
+    this.$form.addEventListener("submit", this.onSubmit.bind(this));
   }
 
-  attachEvents() {
-    this.formEl.addEventListener("submit", (event) => {
-      event.preventDefault();
-
-      this.setName();
-    });
-
-    this.inputEl.addEventListener("input", () => {
-      if (this.inputEl.value.length) {
-        this.errorEl.style.display = "none";
-      }
-    });
+  onSubmit(event) {
+    event.preventDefault();
+    this.setName();
   }
 
   setName() {
-    if (this.inputEl.value.length) {
-      todosService.setName(this.getAttribute("todo-id"), this.inputEl.value);
-      todosService.setEditing(this.getAttribute("todo-id"), false);
-      console.log(this.shadowRoot);
-    } else {
-      this.errorEl.style.display = "block";
-    }
+    todosService.setName(this.getAttribute("todo-id"), this.$input.value);
+    todosService.setEditing(this.getAttribute("todo-id"), false);
   }
 }
 

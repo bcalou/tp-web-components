@@ -35,38 +35,35 @@ export class TodoList extends HTMLElement {
   constructor() {
     super();
 
-    this.el = this.attachShadow({ mode: "open" });
-    this.el.appendChild(todoListTemplate.content.cloneNode(true));
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.appendChild(todoListTemplate.content.cloneNode(true));
 
-    this.itemsEl = this.el.querySelector(".todoList__items");
-    this.itemsEls = [];
-    this.removeDoneEl = this.el.querySelector(".todoList__removeDone");
+    this.itemElements = [];
+    this.$items = this.shadowRoot.querySelector(".todoList__items");
+    this.$removeDone = this.shadowRoot.querySelector(".todoList__removeDone");
 
-    this.attachEvents();
+    this.$removeDone.addEventListener(
+      "click",
+      todosService.removeDone.bind(todosService)
+    );
     this.render();
 
     todosService.subscribe(this.render.bind(this));
   }
 
-  attachEvents() {
-    this.removeDoneEl.addEventListener("click", () =>
-      todosService.removeDone()
-    );
-  }
-
   render() {
     this.renderTodos();
-    this.removeDoneEl.disabled = !todosService.hasDoneTodos();
+    this.$removeDone.disabled = !todosService.hasDoneTodos();
   }
 
   renderTodos() {
     const todosToAdd = [...todosService.todos];
 
     // Go trough each current item to determine which one should be kept
-    this.itemsEls = this.itemsEls.filter((itemEl) => {
+    this.itemElements = this.itemElements.filter(($item) => {
       // Search for the matching todo in the todos to add
       const todo = todosToAdd.find((todo, index) => {
-        if (todo.id === itemEl.getAttribute("todo-id")) {
+        if (todo.id === $item.getAttribute("todo-id")) {
           // Remove the todos from the add list, so it is not added twice
           todosToAdd.splice(index, 1);
           return todo;
@@ -75,7 +72,7 @@ export class TodoList extends HTMLElement {
 
       // Todo not found, element must be removed
       if (!todo) {
-        this.itemsEl.removeChild(itemEl);
+        this.$items.removeChild($item);
       }
 
       // Keep only if the matching todo was found
@@ -84,10 +81,10 @@ export class TodoList extends HTMLElement {
 
     // Add the remaining todos
     todosToAdd.forEach((todo) => {
-      const todoItem = document.createElement("todo-item");
-      todoItem.setAttribute("todo-id", todo.id);
-      this.itemsEls.push(todoItem);
-      this.itemsEl.appendChild(todoItem);
+      const $todo = document.createElement("todo-item");
+      $todo.setAttribute("todo-id", todo.id);
+      this.itemElements.push($todo);
+      this.$items.appendChild($todo);
     });
   }
 }

@@ -13,7 +13,7 @@ todoNewTemplate.innerHTML = `
       height: 30px;
     }
 
-    .todoNew__addButton {
+    .todoNew__submit {
       padding: 0 1rem;
     }
 
@@ -27,50 +27,31 @@ todoNewTemplate.innerHTML = `
     <label for="name">Nom de la tâche</label>
 
     <div class="todoNew__inputAndButton">
-      <input id="name" class="todoNew__input">
-      <button class="todoNew__addButton">Ajouter</button>
+      <input id="name" class="todoNew__input" required pattern=".*[^ ].*">
+      <button class="todoNew__submit">Ajouter</button>
     </div>
   </form>
-
-  <p class="todoNew__error">Le nom de la tâche ne peut pas être vide</p>
 `;
 
 export class TodoNew extends HTMLElement {
   constructor() {
     super();
 
-    this.el = this.attachShadow({ mode: "open" });
-    this.el.appendChild(todoNewTemplate.content.cloneNode(true));
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.appendChild(todoNewTemplate.content.cloneNode(true));
 
-    this.formEl = this.el.querySelector(".todoNew__form");
-    this.inputEl = this.el.querySelector(".todoNew__input");
+    this.$input = this.shadowRoot.querySelector("input");
 
-    this.errorEl = this.el.querySelector(".todoNew__error");
-    this.errorEl.style.display = "none";
-
-    this.attachEvents();
+    this.shadowRoot
+      .querySelector("form")
+      .addEventListener("submit", this.onSubmit.bind(this));
   }
 
-  attachEvents() {
-    this.formEl.addEventListener("submit", (event) => {
-      event.preventDefault();
-      this.addTodo();
-    });
-
-    this.inputEl.addEventListener("input", () => {
-      if (this.inputEl.value.length) {
-        this.errorEl.style.display = "none";
-      }
-    });
-  }
-
-  addTodo() {
-    if (this.inputEl.value.length) {
-      todosService.addTodo(this.inputEl.value);
-      this.inputEl.value = "";
-    } else {
-      this.errorEl.style.display = "block";
-    }
+  // Add the submitted todo and clear the input
+  onSubmit(event) {
+    event.preventDefault();
+    todosService.addTodo(this.$input.value);
+    this.$input.value = "";
   }
 }
 
