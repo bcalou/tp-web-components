@@ -15,24 +15,20 @@ todoItemTemplate.innerHTML = `
       flex-shrink: 0;
     }
 
-    .todoItem__checkbox:checked ~ .todoItem__name .todoItem__nameStatic {
+    .todoItem__checkbox:checked ~ .todoItem__label {
       text-decoration: line-through;
     }
 
-    .todoItem__name {
+    .todoItem__label {
       display: flex;
       flex-direction: column;
       justify-content: center;
       width: 100%;
     }
-
-    .todoItem__nameStatic {
-      margin: 0;
-    }
   </style>
 
   <input type="checkbox" class="todoItem__checkbox">
-  <div class="todoItem__name"></div>
+  <label class="todoItem__label"></label>
   <button class="todoItem__edit">✍️</button>
   <button class="todoItem__delete">🗑️</button>
 `;
@@ -45,7 +41,7 @@ export class TodoItem extends HTMLElement {
     this.el.appendChild(todoItemTemplate.content.cloneNode(true));
 
     this.checkboxEl = this.el.querySelector(".todoItem__checkbox");
-    this.nameEl = this.el.querySelector(".todoItem__name");
+    this.labelEl = this.el.querySelector(".todoItem__label");
     this.editEl = this.el.querySelector(".todoItem__edit");
     this.deleteEl = this.el.querySelector(".todoItem__delete");
 
@@ -72,12 +68,14 @@ export class TodoItem extends HTMLElement {
 
   render() {
     this.checkboxEl.checked = this.todo.done;
-    this.nameEl.innerHTML = "";
+    this.checkboxEl.setAttribute("id", this.todo.id);
+    this.labelEl.innerHTML = "";
 
     if (this.todo.editing) {
-      this.nameEl.appendChild(this.getEditingElement());
+      this.labelEl.appendChild(this.getEditingElement());
     } else {
-      this.nameEl.innerHTML = this.todo.name;
+      this.labelEl.innerHTML = this.todo.name;
+      this.labelEl.setAttribute("for", this.todo.id);
     }
   }
 
