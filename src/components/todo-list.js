@@ -49,7 +49,7 @@ export class TodoList extends HTMLElement {
   renderTodos() {
     const todosToAdd = [...todosService.todos];
 
-    // Go trough each current item to determine which one should be kept
+    // Go through each current item to determine which ones should be kept
     this.itemElements = this.itemElements.filter(($item) => {
       // Search for the matching todo in the todos to add
       const todo = todosToAdd.find((todo, index) => {
