@@ -1,53 +1,43 @@
 import todosService from "/src/services/todos.service.js";
 
-const todoListTemplate = document.createElement("template");
-todoListTemplate.innerHTML = `
-  <style>
-    :host {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-
-    .todoList__list {
-      margin-top: 1rem;
-      padding-bottom: 3rem;
-    }
-
-    .todoList__removeDone {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      height: 3rem;
-      left: 0;
-      box-shadow: 0 -10px 10px white;
-    }
-  </style>
-
-  <todo-new></todo-new>
-
-  <section class="todoList__items"></section>
-
-  <button class="todoList__removeDone">Retirer les tâches effectuées</button>
-`;
-
 export class TodoList extends HTMLElement {
-  constructor() {
-    super();
+  connectedCallback() {
+    this.innerHTML = `
+      <style>
+        .todoList__list {
+          margin-top: 1rem;
+          padding-bottom: 3rem;
+        }
 
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot.appendChild(todoListTemplate.content.cloneNode(true));
+        .todoList__removeDone {
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          height: 3rem;
+          left: 0;
+          box-shadow: 0 -10px 10px white;
+        }
+      </style>
+  
+      <div class="todoList">
+        <todo-new></todo-new>
+        <section class="todoList__items"></section>
+        <button class="todoList__removeDone">
+          Retirer les tâches effectuées
+        </button>
+      </div>
+    `;
 
     this.itemElements = [];
-    this.$items = this.shadowRoot.querySelector(".todoList__items");
-    this.$removeDone = this.shadowRoot.querySelector(".todoList__removeDone");
+    this.$items = this.querySelector(".todoList__items");
+    this.$removeDone = this.querySelector(".todoList__removeDone");
 
     this.$removeDone.addEventListener(
       "click",
       todosService.removeDone.bind(todosService)
     );
-    this.render();
 
+    this.render();
     todosService.subscribe(this.render.bind(this));
   }
 

@@ -1,50 +1,44 @@
 import todosService from "/src/services/todos.service.js";
 
-const todoNewTemplate = document.createElement("template");
-todoNewTemplate.innerHTML = `
-  <style>
-    .todoNew__inputAndButton {
-      margin-top: 0.5rem;
-      display: flex;
-    }
-
-    .todoNew__input {
-      flex: 1;
-      height: 30px;
-    }
-
-    .todoNew__submit {
-      padding: 0 1rem;
-    }
-
-    .todoNew__error {
-      color: red;
-      margin-bottom: 0;
-    }
-  </style>
-
-  <form class="todoNew__form">
-    <label for="name">Nom de la tâche</label>
-
-    <div class="todoNew__inputAndButton">
-      <input id="name" class="todoNew__input" required pattern=".*[^ ].*">
-      <button class="todoNew__submit">Ajouter</button>
-    </div>
-  </form>
-`;
-
 export class TodoNew extends HTMLElement {
-  constructor() {
-    super();
+  connectedCallback() {
+    this.innerHTML = `
+      <style>
+        .todoNew__inputAndButton {
+          margin-top: 0.5rem;
+          display: flex;
+          gap: 0.5rem;
+        }
 
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot.appendChild(todoNewTemplate.content.cloneNode(true));
+        .todoNew__input {
+          flex: 1;
+          width: 0;
+        }
 
-    this.$input = this.shadowRoot.querySelector("input");
+        .todoNew__submit {
+          padding: 0 1rem;
+        }
 
-    this.shadowRoot
-      .querySelector("form")
-      .addEventListener("submit", this.onSubmit.bind(this));
+        .todoNew__error {
+          color: red;
+          margin-bottom: 0;
+        }
+      </style>
+
+      <form class="todoNew__form">
+        <label for="name">Nom de la tâche</label>
+
+        <div class="todoNew__inputAndButton">
+          <input id="name" class="todoNew__input" required pattern=".*[^ ].*">
+          <button class="todoNew__submit">Ajouter</button>
+        </div>
+      </form>
+    `;
+
+    this.$input = this.querySelector("input");
+    this.$form = this.querySelector("form");
+
+    this.addEventListener("submit", this.onSubmit.bind(this));
   }
 
   // Add the submitted todo and clear the input

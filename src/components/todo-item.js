@@ -1,57 +1,6 @@
 import todosService from "/src/services/todos.service.js";
 
-const todoItemTemplate = document.createElement("template");
-todoItemTemplate.innerHTML = `
-  <style>
-    :host {
-      margin: 1rem 0;
-      display: flex;
-    }
-
-    .todoItem__checkbox {
-      height: 2rem;
-      width: 2rem;
-      margin-right: 1rem;
-      flex-shrink: 0;
-    }
-
-    .todoItem__checkbox:checked ~ .todoItem__label {
-      text-decoration: line-through;
-    }
-
-    .todoItem__label {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      width: 100%;
-    }
-  </style>
-
-  <input type="checkbox" class="todoItem__checkbox">
-  <label class="todoItem__label"></label>
-  <button class="todoItem__edit">✍️</button>
-  <button class="todoItem__delete">🗑️</button>
-`;
-
 export class TodoItem extends HTMLElement {
-  constructor() {
-    super();
-
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot.appendChild(todoItemTemplate.content.cloneNode(true));
-
-    this.$checkbox = this.shadowRoot.querySelector(".todoItem__checkbox");
-    this.$label = this.shadowRoot.querySelector(".todoItem__label");
-    this.$editButton = this.shadowRoot.querySelector(".todoItem__edit");
-    this.$deleteButton = this.shadowRoot.querySelector(".todoItem__delete");
-
-    todosService.subscribe(this.render.bind(this));
-
-    this.$checkbox.addEventListener("change", this.onCheck.bind(this));
-    this.$editButton.addEventListener("click", this.onEdit.bind(this));
-    this.$deleteButton.addEventListener("click", this.onDelete.bind(this));
-  }
-
   static get observedAttributes() {
     return ["todo-id"];
   }
@@ -59,11 +8,60 @@ export class TodoItem extends HTMLElement {
   attributeChangedCallback(name) {
     if (name === "todo-id") {
       this.todo = todosService.getById(this.getAttribute("todo-id"));
-      this.render();
     }
   }
 
+  connectedCallback() {
+    this.innerHTML = `
+      <style>
+        .todoItem {
+          margin: 1rem 0;
+          display: flex;
+          gap: 0.5rem;
+        }
+
+        .todoItem__checkbox {
+          height: 2rem;
+          width: 2rem;
+          flex-shrink: 0;
+        }
+
+        .todoItem__checkbox:checked ~ .todoItem__label {
+          text-decoration: line-through;
+        }
+
+        .todoItem__label {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
+        }
+      </style>
+
+      <article class="todoItem">
+        <input type="checkbox" class="todoItem__checkbox">
+        <label class="todoItem__label"></label>
+        <button class="todoItem__edit">✍️</button>
+        <button class="todoItem__delete">🗑️</button>
+      </article>
+    `;
+
+    this.$checkbox = this.querySelector(".todoItem__checkbox");
+    this.$label = this.querySelector(".todoItem__label");
+    this.$editButton = this.querySelector(".todoItem__edit");
+    this.$deleteButton = this.querySelector(".todoItem__delete");
+
+    todosService.subscribe(this.render.bind(this));
+
+    this.$checkbox.addEventListener("change", this.onCheck.bind(this));
+    this.$editButton.addEventListener("click", this.onEdit.bind(this));
+    this.$deleteButton.addEventListener("click", this.onDelete.bind(this));
+
+    this.render();
+  }
+
   render() {
+    console.log("render")
     this.$checkbox.checked = this.todo.done;
     this.$checkbox.setAttribute("id", this.todo.id);
     this.$label.innerHTML = "";
