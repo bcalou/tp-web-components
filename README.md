@@ -196,3 +196,29 @@ Stylisez le composant final en tenant compte des informations suivantes :
 - Les éléments _slottés_ ne font pas partie du _shadow DOM_. Ainsi, ils ne sont pas impactés par les styles du composant, mais ils sont impactés par les styles globaux de la page.
 - Entre ces deux concepts, il est possible de cibler des éléments _slottés_ dans les styles du _shadow DOM_. Par exemple, le sélecteur `::slotted(ul)` cible les listes `ul` qui sont _slottées_ dans le composant.
 - Les enfants de composants _slottés_ restent, eux, innaccessible.
+
+## Projet final : la Todo List
+
+L'objectif est de réaliser une Todo List de ce type :
+
+<img src="doc/todo.png" width="400">
+
+### Contraintes techniques
+
+- Vous pouvez utiliser ou non le _shadow DOM_, selon ce qui vous parle le plus ;
+- Découpage en plusieurs composants ;
+- Le style est libre (mais il en faut un minimum !) ;
+- Mobile first (styles pour écrans élargis optionnels) ;
+- Le résultat devra être accessible. Testez pour cela (ordre recommandé) :
+  - Le résultat du plugin axe DevTools
+  - La navigation clavier
+  - Le lecteur d'écran de votre système
+
+### Fonctionnalités proposées
+
+- Stockage de l'état de l'application en local storage
+- Retrait des tâches effectuées
+- Édition d'une tâche
+- Suppression d'une tâche
+
+C'est une application simple mais il peut y avoir beaucoup de subtilités au niveau des interactions. Prenez le temps d'aller au fond du sujet.
