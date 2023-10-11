@@ -162,7 +162,7 @@ Complétez le code de la classe pour mettre en place les interactions suivantes 
 
 ### Les `<slots>`
 
-Les `<slots>` vont permettre de passer du contenu complexe de l'exérieur vers l'intérieur du composant.
+Les `<slots>` vont permettre de passer du contenu complexe de l'extérieur vers l'intérieur du composant.
 
 Dans notre cas, il faut en effet passer le contenu du tag `<summary>` (qui peut être une simple `string`) et le contenu dévoilé (qui est souvent un contenu plus complexe).
 
