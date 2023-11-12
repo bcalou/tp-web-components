@@ -36,27 +36,24 @@ export class TodoEdit extends HTMLElement {
         .todoEdit {
           display: flex;
         }
-    
+
         .todoEdit__input {
           max-width: calc(100vw - 170px);
         }
-    
+
         .todoEdit__error {
           color: red;
           margin-bottom: 0;
         }
       </style>
-    
+
       <form class="todoEdit__form">
         <input class="todoEdit__input">
         <button>Valider</button>
       </form>
-    
+
       <p class="todoEdit__error">Le nom de la tâche ne peut pas être vide</p>
     `;
-
-    // this.el = this.attachShadow({ mode: "open" });
-    // this.el.appendChild(todoEditTemplate.content.cloneNode(true));
 
     this.formEl = this.querySelector(".todoEdit__form");
     this.inputEl = this.querySelector(".todoEdit__input");
