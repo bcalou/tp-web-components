@@ -7,6 +7,11 @@
     <link href="src/styles/reset.css" rel="stylesheet" />
     <link href="src/styles/styles.css" rel="stylesheet" />
     <link rel="manifest" href="todolist.webmanifest.json" />
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("src/sw.js");
+      }
+    </script>
     <script type="module" src="src/components/todo-list.js"></script>
     <script type="module" src="src/components/todo-item.js"></script>
     <script type="module" src="src/components/todo-edit.js"></script>
