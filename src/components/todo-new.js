@@ -11,6 +11,7 @@ export class TodoNew extends HTMLElement {
       .todoNew__input {
         flex: 1;
         height: 30px;
+        min-width: 0;
       }
 
       .todoNew__addButton {
