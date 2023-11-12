@@ -4,5 +4,5 @@ if ("serviceWorker" in navigator) {
 
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
-  alert("ok");
+  document.getElementById("pwaInstall").style.display = "initial";
 });
