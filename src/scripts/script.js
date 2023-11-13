@@ -24,11 +24,9 @@ pwaInstallButton.addEventListener("click", async () => {
 
   Notification.requestPermission().then((result) => {
     if (result.state === "granted") {
-      if (navigator.setAppBadge) {
-        navigator.setAppBadge(12);
-      }
+      console.log("notifications granted");
     }
-    console.log("not granted");
+    console.log("notifications not granted");
   });
 });
 
@@ -41,4 +39,8 @@ window.addEventListener("appinstalled", () => {
 function disableInAppInstallPrompt() {
   installPrompt = null;
   pwaInstallButton.style.display = "none";
+}
+
+if (navigator.setAppBadge) {
+  navigator.setAppBadge(12);
 }
