@@ -6,6 +6,12 @@
   "display": "standalone",
   "theme_color": "lightblue",
   "background_color": "lightblue",
+  "shortcuts": [
+    {
+      "name": "New todo",
+      "url": "/new-todo"
+    }
+  ],
   "icons": [
     {
       "src": "assets/icons/icon-48x48.png",
