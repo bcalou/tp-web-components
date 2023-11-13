@@ -21,6 +21,15 @@ pwaInstallButton.addEventListener("click", async () => {
   const result = await installPrompt.prompt();
   console.log(`Install prompt was: ${result.outcome}`);
   disableInAppInstallPrompt();
+
+  Notification.requestPermission().then((result) => {
+    if (result.state === "granted") {
+      if (navigator.setAppBadge) {
+        navigator.setAppBadge(12);
+      }
+    }
+    console.log("not granted");
+  });
 });
 
 // Once the app is installed
