@@ -1,6 +1,6 @@
-// if ("serviceWorker" in navigator) {
-//   navigator.serviceWorker.register("./sw.js");
-// }
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js");
+}
 
 let installPrompt;
 const pwaInstallButton = document.getElementById("pwaInstall");
