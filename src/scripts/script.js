@@ -1,5 +1,5 @@
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js");
+  navigator.serviceWorker.register("/sw.js");
 }
 
 let installPrompt;
@@ -39,9 +39,4 @@ window.addEventListener("appinstalled", () => {
 function disableInAppInstallPrompt() {
   installPrompt = null;
   pwaInstallButton.style.display = "none";
-}
-
-if (navigator.setAppBadge) {
-  alert("set badge");
-  navigator.setAppBadge(12);
 }
