@@ -42,6 +42,40 @@ function disableInAppInstallPrompt() {
 }
 
 
+function showNotification() {
+  let notificationOptions = {
+    body: 'Some Notification information',
+    icon: '/thumb.png'
+  }
+  let notif = new Notification('My New Notification', notificationOptions);
+
+  notif.onclick = () => {
+    console.log('Notification clicked');
+  }
+}
+
+if(window.Notification) {
+  if(Notification.permission === 'granted') {
+  } else if(Notification.permission !== 'denied') {
+    Notification.requestPermission(permission => {
+      if(permission === 'granted') {
+      }
+    })
+  }
+}
+
+messaging.getToken({ vapidKey: 'BHQcYkFFS-giLWiENBzd9GS2mVs_E0tcDPYfJWuOXpXVzBmD5jz9wCwiCyEgbsGiOWtWjlWhYFiTtfDvjx1LSgQ' })
+.then(currentToken => {
+  if (currentToken) {
+    console.log(currentToken);
+    return currentToken;
+  } else {
+    console.log('No registration token available. Request permission to generate one.');
+  }
+}).catch(err => {
+  console.log('An error occurred while retrieving token. ', err);
+});
+
 
 messaging.getToken({ vapidKey: 'BDn5L5Z4sw9cXI-zHZBqexRDSyw2afRVM03ph9er3LNar-_tMiy5Q7xSaWnch6IrNDMwnxYC3fek1YW2qRHPhtA' }).then((currentToken) => {
   if (currentToken) {
@@ -63,3 +97,5 @@ messaging.onMessage(payload => {
   console.log('Message received. ', payload);
   // ...
 });
+
+
