@@ -1,49 +1,31 @@
-// const putInCache = async (request, response) => {
-//   const cache = await caches.open("v1");
-//   await cache.put(request, response);
-// };
 
-// const cacheFirst = async ({ request, fallbackUrl }) => {
-//   // First try to get the resource from the cache.
-//   const responseFromCache = await caches.match(request);
-//   if (responseFromCache) {
-//     return responseFromCache;
-//   }
+// Service Worker
+importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
 
-//   // If the response was not found in the cache,
-//   // try to get the resource from the network.
-//   try {
-//     const responseFromNetwork = await fetch(request);
-//     // If the network request succeeded, clone the response:
-//     // - put one copy in the cache, for the next time
-//     // - return the original to the app
-//     // Cloning is needed because a response can only be consumed once.
-//     putInCache(request, responseFromNetwork.clone());
-//     return responseFromNetwork;
-//   } catch (error) {
-//     // If the network request failed,
-//     // get the fallback response from the cache.
-//     const fallbackResponse = await caches.match(fallbackUrl);
-//     if (fallbackResponse) {
-//       return fallbackResponse;
-//     }
-//     // When even the fallback response is not available,
-//     // there is nothing we can do, but we must always
-//     // return a Response object.
-//     return new Response("Network error happened", {
-//       status: 408,
-//       headers: { "Content-Type": "text/plain" },
-//     });
-//   }
-// };
+const firebaseConfig = {
+  apiKey: "AIzaSyCD2F_QbXE5c2BAbcJA8cWgK77dyOh6vEM",
+  authDomain: "bcalou-pwa.firebaseapp.com",
+  projectId: "bcalou-pwa",
+  storageBucket: "bcalou-pwa.appspot.com",
+  messagingSenderId: "120929146497",
+  appId: "1:120929146497:web:9507edaf73e22e37469f80"
+};
 
-self.addEventListener("fetch", (event) => {
-  console.log("event");
-  return new Response("Hello world");
-  // event.respondWith(
-  //   cacheFirst({
-  //     request: event.request,
-  //     fallbackUrl: "/fallback.html",
-  //   })
-  // );
-});
+// // Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+
+// Initialize Firebase Cloud Messaging and get a reference to the service
+const messaging = firebase.messaging()
+
+messaging.onBackgroundMessage(payload => {
+    // Customize notification here
+    const notificationTitle = 'Background Message Title';
+    const notificationOptions = {
+      body: 'Background Message body.',
+      icon: '/thumb.png'
+    };
+  
+    self.registration.showNotification(notificationTitle,
+      notificationOptions);
+  });
