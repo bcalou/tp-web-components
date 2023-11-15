@@ -58,6 +58,17 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
+messaging.onBackgroundMessage(payload => {
+  const notificationTitle = 'Background Message Title';
+  const notificationOptions = {
+    body: notificationTitle,
+    icon: '<>'
+  };
+
+  self.registration.showNotification(notificationTitle,
+    notificationOptions);
+});
+
 messaging.getToken({ vapidKey: 'BHQcYkFFS-giLWiENBzd9GS2mVs_E0tcDPYfJWuOXpXVzBmD5jz9wCwiCyEgbsGiOWtWjlWhYFiTtfDvjx1LSgQ' })
 .then(currentToken => {
   if (currentToken) {
