@@ -16,6 +16,20 @@
     <script type="module" src="src/components/todo-edit.js"></script>
     <script type="module" src="src/components/todo-new.js"></script>
     <title>Web Components</title>
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyCD2F_QbXE5c2BAbcJA8cWgK77dyOh6vEM",
+        authDomain: "bcalou-pwa.firebaseapp.com",
+        projectId: "bcalou-pwa",
+        storageBucket: "bcalou-pwa.appspot.com",
+        messagingSenderId: "120929146497",
+        appId: "1:120929146497:web:9507edaf73e22e37469f80"
+      };
+     
+       // Initialize Firebase
+       firebase.initializeApp(firebaseConfig);
+       const messaging = firebase.messaging();
+     </script>
   </head>
   <body>
     <h1>My Todo List</h1>
