@@ -77,7 +77,7 @@ messaging.getToken({ vapidKey: 'BHQcYkFFS-giLWiENBzd9GS2mVs_E0tcDPYfJWuOXpXVzBmD
 });
 
 
-messaging.getToken({ vapidKey: 'BDn5L5Z4sw9cXI-zHZBqexRDSyw2afRVM03ph9er3LNar-_tMiy5Q7xSaWnch6IrNDMwnxYC3fek1YW2qRHPhtA' }).then((currentToken) => {
+messaging.getToken({ vapidKey: 'BHQcYkFFS-giLWiENBzd9GS2mVs_E0tcDPYfJWuOXpXVzBmD5jz9wCwiCyEgbsGiOWtWjlWhYFiTtfDvjx1LSgQ' }).then((currentToken) => {
   if (currentToken) {
     // Send the token to your server and update the UI if necessary
     // ...
