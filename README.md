@@ -103,3 +103,67 @@ nécessaires :
 - Grâce à la méthode `attributeChangedCallback(name, oldVal, newVal)`, lorsque
   vous détectez un changement sur l'attribut `format`, faites le nécessaire pour
   que la mise à jour soit correcte.
+
+## 2. Le _Shadow DOM_
+
+Le _Shadow DOM_ permet d'isoler le contenu d'un composant du reste de la page.
+**Cela n'est pas toujours nécessaire**, mais peut être pratique dans certains
+cas.
+
+### Le composant `<screen-size>`
+
+Le composant `<screen-size>` se comporte comme suit :
+
+- il est flottant en haut à droite de l'écran
+- il indique en permanence la largeur du viewport
+- la largeur est indiquée en `px` ou en `rem`
+- un bouton permet d'alterner entre les deux unités
+- le composant accepte un attribut `unit` pour paramétrer son unité initiale (ou
+  utilise la valeur `px` par défaut)
+- on ne lui demande pas de réagir au changement de valeur de l'attribut `unit`
+  par la suite
+
+En voici un aperçu :
+
+<img src="doc/screen-size.jpg" width="400">
+
+Construisez ce composant en vous inspirant du composant `<current-time>`, mais
+cette fois-ci en utilisant le _Shadow DOM_ (soit en deux temps, soit
+directement).
+
+_Note : pour obtenir la largeur de la fenêtre en REM, vous pouvez utiliser
+l'instruction suivante :_
+
+```js
+window.innerWidth /
+  parseInt(getComputedStyle(document.body).getPropertyValue("font-size"));
+```
+
+### Spécificités du _Shadow DOM_
+
+- Toujours `connectedCallback()`, le _Shadow DOM_ est crée grâce à l'instruction
+  `this.attachShadow({ mode: "open" });`
+- Les `querySelector` ne s'éxécutent plus sur `this` mais sur `this.shadowRoot`.
+
+### _Shadow DOM_ et styles
+
+Vous ne pouvez pas appliquer des styles depuis votre fichier global (essayez !).
+Le _shadow DOM_ encapsule ses propres styles.
+
+Vous devez donc déclarer les styles directement dans le template, avec une
+balise `<style>` (par exemple injectée via `innerHTML`).
+
+En contrepartie, les styles que vous déclarez dans un composant utilisant le
+_shadow DOM_ ne peuvent pas "fuiter". Il est donc possible de se passer de
+classes et de cibler les éléments HTML sans s'inquiéter de potentiels conflits.
+
+Vous pouvez cibler l'élément qui contient le web component grâce au sélecteur
+`:host`.
+
+### _Shadow DOM_ et scripts
+
+- Dans la console, cherchez les boutons présents sur la page :
+  `document.querySelector("button")`. Qu'observez-vous ?
+- Cherchez à présent
+  `document.querySelector("screen-size").shadowRoot.querySelector("button")` et
+  comparez le résultat.
