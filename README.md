@@ -167,3 +167,112 @@ Vous pouvez cibler l'élément qui contient le web component grâce au sélecteu
 - Cherchez à présent
   `document.querySelector("screen-size").shadowRoot.querySelector("button")` et
   comparez le résultat.
+
+## 3. Les éléments `<template>` et `<slot>`
+
+### Préambule : l'élément `<details>`
+
+Dans cette partie, nous ferons usage de l'élément HTML `<details>`. Sa
+compréhension est requise pour la suite (lire la
+[documentation MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details)).
+
+### La balise `<template>`
+
+La balise `<template>` permet de définir un fragment de HTML, qui n'est pas
+affiché de base dans la page mais dont on peut se servir pour créer des
+composants.
+
+Ajoutez le code suivant à votre fichier HTML :
+
+```html
+<template id="custom-details">
+  <details>
+    <summary>Cliquez pour ouvrir</summary>
+    <div>Je suis le contenu détaillé</div>
+  </details>
+</template>
+```
+
+Comme vous pouvez le constater, le résultat n'est pas affiché dans le
+navigateur.
+
+### Le composant `<custom-details>`
+
+<img src="doc/details.jpg" width="400">
+
+Nous allons créer un composant `<custom-details>` qui étend le comportement de
+base du composant `<details>` natif.
+
+Comme précédemment, créez une classe `CustomDetails` et associez là au composant
+`custom-details`.
+
+Comme précédemment, au sein du constructeur, générez un _shadow DOM_.
+
+Mais cette fois-ci, le contenu du composant n'est pas géré au sein de la classe.
+Pour le récupérer, utilisez la ligne suivante :
+
+```js
+const template = document.getElementById("custom-details").content;
+```
+
+Puis attachez le contenu du template au _shadow DOM_ :
+
+```js
+this.shadowRoot.appendChild(template.cloneNode(true));
+```
+
+En ajoutant un élément `<custom-details>` à la page, vous devriez désormais voir
+le contenu du template.
+
+Complétez le code de la classe pour mettre en place les interactions suivantes :
+
+- ouverture de l'élément au survol
+- ouverture de l'élément au focus
+- fermeture de l'élément à l'appui sur la touche Échap
+
+### Les `<slots>`
+
+Les `<slots>` vont permettre de passer du contenu complexe de l'extérieur vers
+l'intérieur du composant.
+
+Dans notre cas, il faut en effet passer le contenu du tag `<summary>` (qui peut
+être une simple `string`) et le contenu dévoilé (qui est souvent un contenu plus
+complexe).
+
+Dans un template, il est possible d'ajouter un _slot_ de cette façon :
+
+```html
+<template>
+  ...
+  <slot name="summary"></slot>
+  ...
+</template>
+```
+
+À cet endroit sera inséré l'élément associé de cette façon :
+
+```html
+<custom-details>
+  <span slot="summary">Les 3 technologies des Web Components</span>
+</custom-details>
+```
+
+Ajoutez les _slots_ `summary` et `content`. Pour l'exemple, passez une liste
+`<ul>` en contenu.
+
+Vérifiez le bon fonctionnement.
+
+### _Slots_ et styles
+
+Stylisez le composant final en tenant compte des informations suivantes
+(effectuez des tests au fur et au mesure) :
+
+- Une balise `<style>` insérée au sein de la balise `<template>` permet de
+  styliser le _shadow DOM_.
+- Les éléments _slottés_ ne font pas partie du _shadow DOM_. Ainsi, ils ne sont
+  pas impactés par les styles du composant, mais ils sont impactés par les
+  styles globaux de la page.
+- Entre ces deux concepts, il est possible de cibler des éléments _slottés_ dans
+  les styles du _shadow DOM_. Par exemple, le sélecteur `::slotted(ul)` cible
+  les listes `ul` qui sont _slottées_ dans le composant.
+- Les enfants de composants _slottés_ restent, eux, innaccessible.
