@@ -4,6 +4,7 @@
 <head>
   <script src="current-time.js"></script>
   <script src="screen-size.js"></script>
+  <script src="custom-details.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
@@ -15,6 +16,52 @@
   <current-time format="utc"></current-time>
 
   <screen-size></screen-size>
+
+  <template id="custom-details">
+    <style>
+      details {
+        background: lightpink;
+        padding: 1rem;
+        border: 0.125rem solid black;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+      }
+
+      details[open]>div {
+        animation: fadeIn 0.3s;
+      }
+
+      ::slotted(ul) {
+        list-style: none;
+        padding-left: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    </style>
+
+    <details>
+      <summary>
+        <slot name="summary"></slot>
+      </summary>
+      <div>
+        <slot name="content"></slot>
+      </div>
+    </details>
+  </template>
+
+  <custom-details>
+    <span slot="summary">Les 3 technologies des Web Components</span>
+    <ul slot="content">
+      <li>Custom Elements</li>
+      <li>Shadow DOM</li>
+      <li>Templates et slots</li>
+    </ul>
+  </custom-details>
 </body>
 
 </html>
