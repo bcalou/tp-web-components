@@ -1,3 +1,5 @@
+import { todoStore } from '../data/todo-store.js';
+
 customElements.define("todo-form", class extends HTMLElement {
   connectedCallback() {
     this.attachShadow({ mode: "open" });
@@ -24,7 +26,7 @@ customElements.define("todo-form", class extends HTMLElement {
   onSubmit(event) {
     event.preventDefault();
 
-    // store ???
+    todoStore.add(this.$input.value);
 
     this.$input.value = "";
   }
