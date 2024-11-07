@@ -6,21 +6,55 @@ customElements.define("todo-list", class extends HTMLElement {
   connectedCallback() {
     this.attachShadow({ mode: "open" });
 
-    this.render();
+    this.shadowRoot.innerHTML = `<ul></ul>`
 
-    this.unsubscribe = todoStore.subscribe(() => this.render());
+    this.$list = this.shadowRoot.querySelector("ul");
+
+    // Créer une copie locale du tableau des todos
+    this.localTodos = new Array(...todoStore.getAll());
+
+    // Pour chaque todo du store, l'ajouter à la liste (rendu initial)
+    todoStore.getAll().forEach(todo => this.showTodo(todo));
+
+    // Mettre à jour la liste quand le store publie une mise à jour
+    this.unsubscribe = todoStore.subscribe((todos) => this.update(todos));
   }
 
   disconnectedCallback() {
     this.unsubscribe();
   }
 
-  // Rendu de la liste complète à partir des todos
-  render() {
-    this.shadowRoot.innerHTML = `<ul>
-      ${todoStore.getAll().map(todo => `<li>
-        <todo-item todo-id="${todo.id}"></todo-item>
-      </li>`).join("")}
-    </ul>`
+  // Créer un élément todo-item et l'ajout à l'ul
+  showTodo(todo) {
+    const $todoLi = document.createElement("li");
+
+    const $todoItem = document.createElement("todo-item");
+    $todoItem.setAttribute("todo-id", todo.id);
+
+    $todoLi.appendChild($todoItem);
+    this.$list.appendChild($todoLi);
+  }
+
+  // Mettre à jour l'affichage en fonction des mises à jour
+  update(updatedTodos) {
+
+    // Ajouter les nouvelles todos qui ne sont pas encore affichées
+    updatedTodos.forEach(updatedTodo => {
+      if (!this.localTodos.find(localTodo => localTodo.id === updatedTodo.id)) {
+        this.showTodo(updatedTodo);
+      }
+    });
+
+    // Supprimer les todos obsolètes qui sont affichées mais absentes du store
+    this.localTodos.forEach(localTodo => {
+      if (!updatedTodos.find(updatedTodo => updatedTodo.id === localTodo.id)) {
+        this.shadowRoot.querySelector(
+          `li:has([todo-id="${localTodo.id}"])`
+        ).remove();
+      }
+    });
+
+    // Mettre à jour la copie locale du tableau pour les comparaisons suivantes
+    this.localTodos = new Array(...updatedTodos);
   }
 });
