@@ -4,6 +4,8 @@ import './todo-item.js';
 
 customElements.define("todo-list", class extends HTMLElement {
   connectedCallback() {
+    this.attachShadow({ mode: "open" });
+
     this.render();
 
     this.unsubscribe = todoStore.subscribe(() => this.render());
@@ -15,7 +17,7 @@ customElements.define("todo-list", class extends HTMLElement {
 
   // Rendu de la liste complète à partir des todos
   render() {
-    this.innerHTML = `<ul>
+    this.shadowRoot.innerHTML = `<ul>
       ${todoStore.getAll().map(todo => `<li>
         <todo-item todo-id="${todo.id}"></todo-item>
       </li>`).join("")}

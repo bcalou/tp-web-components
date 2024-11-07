@@ -34,6 +34,24 @@ class TodoStore {
     this.#notify();
   }
 
+  // Supprimer une todo à partir de son id
+  deleteById(id) {
+    this.#todos = this.#todos.filter(todo => todo.id !== id);
+
+    console.log(`Deleted todo #${id}. New list:`, this.#todos);
+
+    this.#notify();
+  }
+
+  // Garder uniquement les todos pour lesquelles done vaut 0
+  deleteDone() {
+    this.#todos = this.#todos.filter(todo => !todo.done);
+
+    console.log("Deleted done todos");
+
+    this.#notify();
+  }
+
   // Appeler tous les écouteurs enregistrés pour leur passer la liste à jour
   #notify() {
     this.#listeners.forEach(listener => listener(this.#todos));

@@ -11,6 +11,12 @@ customElements.define("todo-app", class extends HTMLElement {
 
       <todo-form></todo-form>
       <todo-list></todo-list>
+
+      <button id="deleteDone">Supprimer les tâches effectuées</button>
     `
+
+    this.shadowRoot.getElementById("deleteDone").addEventListener("click", () =>
+      todoStore.deleteDone()
+    )
   }
 })
