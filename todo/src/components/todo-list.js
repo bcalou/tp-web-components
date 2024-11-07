@@ -1,4 +1,6 @@
+
 import { todoStore } from '../data/todo-store.js';
+import './todo-item.js';
 
 customElements.define("todo-list", class extends HTMLElement {
   connectedCallback() {
@@ -14,7 +16,9 @@ customElements.define("todo-list", class extends HTMLElement {
   // Rendu de la liste complète à partir des todos
   render() {
     this.innerHTML = `<ul>
-      ${todoStore.getAll().map(todo => `<li>${todo.label}</li>`).join("")}
+      ${todoStore.getAll().map(todo => `<li>
+        <todo-item todo-id="${todo.id}"></todo-item>
+      </li>`).join("")}
     </ul>`
   }
 });

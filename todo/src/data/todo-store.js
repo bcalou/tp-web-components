@@ -16,6 +16,11 @@ class TodoStore {
     return this.#todos;
   }
 
+  // Récupérer la todo qui correspond à l'id fourni
+  getById(id) {
+    return this.#todos.find(todo => todo.id === id);
+  }
+
   // Créer une todo à partir du label et l'ajouter à la liste
   add(label) {
     this.#todos.push({
