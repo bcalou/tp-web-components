@@ -1,16 +1,12 @@
 class TodoStore {
-  #todos = [
-    {
-      id: "123",
-      label: "Faire les courses",
-      done: 0
-    },
-    {
-      id: "456",
-      label: "Faire à manger",
-      done: 1
-    }
-  ];
+  #todos = [];
+  #listeners = [];
+
+  subscribe(callback) {
+    this.#listeners.push(callback);
+
+    console.log(this.#listeners);
+  }
 
   getAll() {
     return this.#todos;
@@ -24,6 +20,12 @@ class TodoStore {
     });
 
     console.log("Added todo. New list", this.#todos);
+
+    this.#notify();
+  }
+
+  #notify() {
+    this.#listeners.forEach(listener => listener(this.#todos));
   }
 }
 

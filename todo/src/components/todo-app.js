@@ -1,3 +1,4 @@
+import { todoStore } from '../data/todo-store.js';
 import './todo-form.js';
 import './todo-list.js';
 
