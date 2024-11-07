@@ -12,6 +12,7 @@ customElements.define("todo-app", class extends HTMLElement {
       <todo-form></todo-form>
       <todo-list></todo-list>
 
+      <button id="markAllAsDone">Cocher toutes les cases</button>
       <button id="deleteDone">Supprimer les tâches effectuées</button>
     `
 

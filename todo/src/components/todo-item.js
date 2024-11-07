@@ -19,6 +19,12 @@ customElements.define("todo-item", class extends HTMLElement {
       </button>
     `;
 
+    this.$input = this.shadowRoot.querySelector("input");
+
+    this.$input.addEventListener("change", () =>
+      todoStore.updateDone(this.todo.id, this.$input.checked ? 1 : 0)
+    )
+
     this.shadowRoot.getElementById("delete").addEventListener("click", () =>
       todoStore.deleteById(this.todo.id)
     );

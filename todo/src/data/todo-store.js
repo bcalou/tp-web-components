@@ -29,7 +29,16 @@ class TodoStore {
       id: crypto.randomUUID()
     });
 
-    console.log("Added todo. New list", this.#todos);
+    console.log(`Added todo ${label}`);
+
+    this.#notify();
+  }
+
+  // Mettre à jour la valeur done de la todo dont l'id est fourni
+  updateDone(id, done) {
+    this.getById(id).done = done;
+
+    console.log(`Todo #${id} done property set to ${done}`);
 
     this.#notify();
   }
@@ -38,7 +47,7 @@ class TodoStore {
   deleteById(id) {
     this.#todos = this.#todos.filter(todo => todo.id !== id);
 
-    console.log(`Deleted todo #${id}. New list:`, this.#todos);
+    console.log(`Deleted todo #${id}`);
 
     this.#notify();
   }
@@ -54,6 +63,8 @@ class TodoStore {
 
   // Appeler tous les écouteurs enregistrés pour leur passer la liste à jour
   #notify() {
+    console.log("Notifying:", this.#todos);
+
     this.#listeners.forEach(listener => listener(this.#todos));
   }
 
