@@ -23,11 +23,14 @@ customElements.define("todo-form", class extends HTMLElement {
     this.$form.addEventListener("submit", (event) => this.onSubmit(event))
   }
 
+  // Lorsque le formulaire valide est soumis
   onSubmit(event) {
-    event.preventDefault();
+    event.preventDefault(); // Empêcher le rechargement de la page
 
+    // Demander au store la création d'une todo
     todoStore.add(this.$input.value);
 
+    // Vider le champ
     this.$input.value = "";
   }
 })
