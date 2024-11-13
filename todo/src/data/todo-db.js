@@ -81,7 +81,74 @@ export class TodoDB {
       console.info(`Added todo: `, todo.id);
 
       // On a modifié la base, on appelle la fonction d'update
-      this.#onUpdate(await this.getAll());
+      this.#notify();
     }
+  }
+
+  // Mettre à jour les todos dont les ids sont fournis avec les changements
+  // contenus dans changes
+  async updateByIds(ids, changes) {
+    await this.#ready;
+    
+    const transaction = this.#db.transaction(this.#storeName, "readwrite");
+    const store = transaction.objectStore(this.#storeName);
+
+    ids.forEach(async (id) => {
+      // On récupère les items via le store de la transaction en cours
+      const item = await new Promise((resolve, reject) => {
+        const request = store.get(id);
+
+        request.onsuccess = () => resolve(request.result);
+
+        request.onerror = (error) => reject(`Failed to get todo ${id}: ${error}`)
+      });
+
+      // Pour chaque changement dans changes, on modifie l'objet récupéré
+      for (const [key, value] of Object.entries(changes)) {
+        item[key] = value;
+      }
+
+      // On met à jour l'objet dans IndexedDB
+      const request = store.put(item);
+
+      request.onsuccess = () => console.info(`Updated todo ${id}`)
+      request.onerror = (error) => console.error(`Failed updating todo ${id}`)
+    })
+
+    // La transaction est complète quand toutes les requêtes sont OK
+    transaction.oncomplete = async () => {
+      console.info("Update transaction complete");
+      this.#notify();
+    }
+
+    transaction.onerror = (error) => console.error(`Update transaction failed: ${error}`);
+  }
+
+  // Supprimer les todos dont les ids sont fournis
+  async deleteByIds(ids) {
+    await this.#ready;
+
+    const transaction = this.#db.transaction(this.#storeName, "readwrite");
+    const store = transaction.objectStore(this.#storeName);
+
+    // Pour chaque id passé, on fait une requête de suppression
+    ids.forEach(id => {
+      const request = store.delete(id);
+
+      request.onsuccess = () => console.info(`Deleted todo ${id}`)
+      request.onerror = (error) => console.error(`Failed deleting todo ${id}`)
+    })
+
+    // La transaction est complète quand toutes les requêtes sont OK
+    transaction.oncomplete = async () => {
+      console.info("Deletion transaction complete");
+      this.#notify();
+    }
+
+    transaction.onerror = (error) => console.error(`Deletion transaction failed: ${error}`);
+  }
+
+  async #notify() {
+    this.#onUpdate(await this.getAll());
   }
 }

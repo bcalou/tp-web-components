@@ -40,21 +40,12 @@ class TodoStore {
 
   // Mettre à jour la valeur done de la todo dont l'id est fourni
   updateDone(id, done) {
-    this.getById(id).done = done;
-
-    console.log(`Todo #${id} done property set to ${done}`);
-
-    this.#notify();
+    this.#todoDB.updateByIds([id], { done })
   }
 
   // Supprimer une todo à partir de son id
   deleteById(id) {
-    console.warn("Pas implémenté");
-    //this.#todos = this.#todos.filter(todo => todo.id !== id);
-
-    //console.log(`Deleted todo #${id}`);
-
-    //this.#notify();
+    this.#todoDB.deleteByIds([id]);
   }
 
   // Garder uniquement les todos pour lesquelles done vaut 0

@@ -5,7 +5,12 @@ customElements.define("todo-item", class extends HTMLElement {
     this.attachShadow({ mode: "open" });
 
     this.id = this.getAttribute("todo-id");
-    this.todo = todoStore.getById(this.id);
+
+    this.init();
+  }
+
+  async init() {
+    this.todo = await todoStore.getById(this.id);
 
     this.shadowRoot.innerHTML = /* HTML */ `
       <form>
