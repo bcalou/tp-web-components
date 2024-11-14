@@ -36,18 +36,34 @@ function onMessage(data, ws) {
   const { action, payload } = message;
 
   switch(action) {
-    case "greet":
-      greet(payload, ws);
+    case "add":
+      add(message, ws);
       break;
     default:
       ws.send(JSON.stringify({error: `Unknown action : ${action}`}))
   }
 }
 
-function greet(payload, ws) {
-  clients.forEach((client) => {
-    if (client !== ws) {
-      client.send(JSON.stringify({message: `Hello from ${payload.firstname} ${payload.lastname}`}))
-    }
-  })
+function add(message, ws) {
+  const { todo } = message.payload;
+
+  return new Promise((resolve, reject) => {
+    db.run(
+      "INSERT INTO TODOS (id, label, done) VALUES (?, ?, ?)",
+      [todo.id, todo.label, todo.done],
+      function(error) {
+        if (error) {
+          reject(`Failed to add item #${todo.id}: ${error}`)
+        }
+
+        clients.forEach((client) => {
+          if (client !== ws) {
+            client.send(JSON.stringify(message))
+          }
+        })
+
+        resolve();
+      }
+    )
+  });
 }

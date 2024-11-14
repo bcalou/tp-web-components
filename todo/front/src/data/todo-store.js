@@ -1,11 +1,22 @@
 import { TodoDB } from './todo-db.js';
+import { TodoWS } from './todo-ws.js';
 
 class TodoStore {
   #todoDB;
+  #todoWS;
   #listeners = [];
 
   constructor() {
     this.#todoDB = new TodoDB((items) => this.#notify(items));
+    this.#todoWS = new TodoWS((message) => {
+      switch (message.action) {
+        case "add":
+          this.#todoDB.add(message.payload.todo);
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   // Enregistrer une fonction qui sera appelée par le Store pour informer les
@@ -36,6 +47,7 @@ class TodoStore {
     };
 
     this.#todoDB.add(newTodo);
+    this.#todoWS.send({action: "add", payload: { todo: newTodo }})
   }
 
   // Mettre à jour la valeur done de la todo dont l'id est fourni
