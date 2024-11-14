@@ -39,6 +39,9 @@ function onMessage(data, ws) {
     case "add":
       add(message, ws);
       break;
+    case "deleteByIds":
+      deleteByIds(message, ws);
+      break;
     default:
       ws.send(JSON.stringify({error: `Unknown action : ${action}`}))
   }
@@ -66,4 +69,28 @@ function add(message, ws) {
       }
     )
   });
+}
+
+function deleteByIds(message, ws) {
+  const { ids } = message.payload;
+
+  return new Promise((resolve, reject) => {
+    db.run(
+      `DELETE FROM todos WHERE id IN (${ids.map(() => "?").join(", ")})`,
+      [...ids],
+      function(error) {
+        if (error) {
+          reject(`Failed to delete items ${ids}: ${error}`)
+        }
+
+        clients.forEach((client) => {
+          if (client !== ws) {
+            client.send(JSON.stringify(message))
+          }
+        })
+
+        resolve();
+      }
+    )
+  })
 }

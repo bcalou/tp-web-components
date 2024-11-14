@@ -8,15 +8,10 @@ class TodoStore {
 
   constructor() {
     this.#todoDB = new TodoDB((items) => this.#notify(items));
-    this.#todoWS = new TodoWS((message) => {
-      switch (message.action) {
-        case "add":
-          this.#todoDB.add(message.payload.todo);
-          break;
-        default:
-          break;
-      }
-    });
+
+    // Quand le WS récupère un message du server, on le fait passer à todoDB
+    // pour répercuter l'impact en local
+    this.#todoWS = new TodoWS((message) => this.#todoDB.send(message));
   }
 
   // Enregistrer une fonction qui sera appelée par le Store pour informer les
@@ -46,8 +41,7 @@ class TodoStore {
       id: crypto.randomUUID()
     };
 
-    this.#todoDB.add(newTodo);
-    this.#todoWS.send({action: "add", payload: { todo: newTodo }})
+    this.#send({action: "add", payload: { todo: newTodo }});
   }
 
   // Mettre à jour la valeur done de la todo dont l'id est fourni
@@ -57,7 +51,7 @@ class TodoStore {
 
   // Supprimer une todo à partir de son id
   deleteById(id) {
-    this.#todoDB.deleteByIds([id]);
+    this.#send({action: "deleteByIds", payload: {ids: [id]}})
   }
 
   // Garder uniquement les todos pour lesquelles done vaut 0
@@ -68,6 +62,12 @@ class TodoStore {
     //console.log("Deleted done todos");
 
     //this.#notify();
+  }
+
+  // Envoyer un message à TodoDB et à TodoWS
+  #send(message) {
+    this.#todoDB.send(message);
+    this.#todoWS.send(message);
   }
 
   // Appeler tous les écouteurs enregistrés pour leur passer la liste à jour

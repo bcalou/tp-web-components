@@ -65,8 +65,30 @@ export class TodoDB {
     })
   }
 
+  // Executer une opération en local
+  send(message) {
+    const { action, payload } = message;
+
+    switch(action) {
+      case "add":
+        this.#add(payload);
+        break;
+      case "updateByIds":
+        this.#updateByIds(payload);
+        break;
+      case "deleteByIds":
+        this.#deleteByIds(payload);
+        break;
+      default:
+        console.warn(`Action ${action} non implémentée`);
+        break;
+    }
+  }
+
   // Ajouter une todo (objet déjà mis en forme par TodoStore)
-  async add(todo) {
+  async #add(payload) {
+    const { todo } = payload;
+
     await this.#ready;
   
     const transaction = this.#db.transaction(this.#storeName, "readwrite");
@@ -87,7 +109,9 @@ export class TodoDB {
 
   // Mettre à jour les todos dont les ids sont fournis avec les changements
   // contenus dans changes
-  async updateByIds(ids, changes) {
+  async #updateByIds(payload) {
+    const { ids, changes } = payload;
+
     await this.#ready;
     
     const transaction = this.#db.transaction(this.#storeName, "readwrite");
@@ -125,7 +149,9 @@ export class TodoDB {
   }
 
   // Supprimer les todos dont les ids sont fournis
-  async deleteByIds(ids) {
+  async #deleteByIds(payload) {
+    const { ids } = payload;
+
     await this.#ready;
 
     const transaction = this.#db.transaction(this.#storeName, "readwrite");
@@ -148,6 +174,7 @@ export class TodoDB {
     transaction.onerror = (error) => console.error(`Deletion transaction failed: ${error}`);
   }
 
+  // Appeler la méthode fournie par TodoStore pour l'informer
   async #notify() {
     this.#onUpdate(await this.getAll());
   }
